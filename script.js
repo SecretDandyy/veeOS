@@ -8,13 +8,13 @@ let systemActive = false;
 function bootUpSystem() {
     bootScreen.style.display = 'none';
     statusLabel.innerText = "SYSTEM: REBOOTING...";
-    avatar.className = 'state-reboot';
+    avatar.src = 'reboot.png';
 
     startListening();
-  
+
     setTimeout(() => {
         systemActive = true;
-        avatar.className = 'state-idle';
+        avatar.src = 'idle.png';
         statusLabel.innerText = "SYSTEM: IDLE";
         handleBlinking();
     }, 3000);
@@ -22,30 +22,25 @@ function bootUpSystem() {
 
 function handleBlinking() {
     if (!systemActive) return;
-  
+
     if (!isListening) {
-        avatar.className = 'state-blink';
+        avatar.src = 'blink.png';
         statusLabel.innerText = "SYSTEM: BLINK";
 
         setTimeout(() => {
             if (!isListening) {
-                avatar.className = 'state-idle';
+                avatar.src = 'idle.png';
                 statusLabel.innerText = "SYSTEM: IDLE";
             }
-        }, 250);
+        }, 200);
     }
-  
+
     let nextBlink = Math.random() * 4000 + 2000;
     setTimeout(handleBlinking, nextBlink);
 }
-
 function startListening() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    
-    if (!SpeechRecognition) {
-        console.log("Speech recognition not supported.");
-        return;
-    }
+    if (!SpeechRecognition) return;
 
     const recognition = new SpeechRecognition();
     recognition.continuous = true;
@@ -56,15 +51,14 @@ function startListening() {
 
         isListening = true;
         statusLabel.innerText = "SYSTEM: LISTENING";
-        avatar.className = 'state-idle';
-      
+        avatar.src = 'idle.png';
+
         clearTimeout(window.silenceTimer);
         window.silenceTimer = setTimeout(() => {
             isListening = false;
             statusLabel.innerText = "SYSTEM: IDLE";
-        }, 1500);
+        }, 1200);
     };
 
-    recognition.onerror = (err) => console.error("Mic Error:", err);
     recognition.start();
 }
