@@ -19,7 +19,6 @@ function bootUpSystem() {
         handleBlinking();
     }, 3000);
 }
-
 function handleBlinking() {
     if (!systemActive) return;
 
